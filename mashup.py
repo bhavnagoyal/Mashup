@@ -1,5 +1,4 @@
 import smtplib
-import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
@@ -114,32 +113,30 @@ def folder1(links):
     for link in links:
         download_video(link)
 
-def send_request():
-    # code to send the request
-        st.title("Audio File Cutter")
-        st.write("Enter the name of the singer, the number of seconds to cut, and your email address")
-        #folder = "vid"
-        singer = st.text_input("Singer name: ")
-        seconds = st.number_input("Number of seconds to cut: ")
-        num = st.number_input("Number of videos: ",min_value=2, max_value=50, step=1)
-        start_or_end = "start"
-        to = st.text_input("Email address: ")
 
-        if st.button("Submit"):
-            links= get_links(singer)[:num]
-            folder1(links)
-            convert_to_audio()
-            cut_audio( seconds)
-            output_filename=merge_audios()
-            #output_filename="outfile.mp3"
-            if output_filename:
-                send_email(to, output_filename)
-                st.success("Audio file sent to your email address successfully")
-            else:
-                st.error("No audio file found for the singer")
-                
-rate_limit = 2 # requests per second
-time_between_requests = 1 / rate_limit
-while True:
-    send_request()
-    time.sleep(time_between_requests)
+def main():
+    st.title("Mashup")
+    st.write("Enter the name of the singer, the number of seconds to cut, and your email address")
+    #folder = "vid"
+    singer = st.text_input("Singer name: ")
+    seconds = st.number_input("Number of seconds to cut: ")
+    num = st.number_input("Number of videos: ",min_value=2, max_value=50, step=1)
+    start_or_end = "start"
+    to = st.text_input("Email address: ")
+
+    if st.button("Submit"):
+        links= get_links(singer)[:num]
+        folder1(links)
+        convert_to_audio()
+        cut_audio( seconds)
+        output_filename=merge_audios()
+        #output_filename="outfile.mp3"
+        if output_filename:
+            send_email(to, output_filename)
+            st.success("Audio file sent to your email address successfully")
+            exit(1)
+        else:
+            st.error("No audio file found for the singer")
+
+if __name__ == "__main__":
+    main()
